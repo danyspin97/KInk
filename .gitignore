@@ -1,0 +1,12 @@
+Binaries/
+Build/
+Intermediate/
+Saved/
+KInk.VC.VC.opendb
+KInk.VC.db
+KInk.sln
+/SourceArt/Music/
+/Content/Asset/Music/
+/SourceArt/Font/
+/Content/Asset/Font/
+.vs/

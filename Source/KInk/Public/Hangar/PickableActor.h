@@ -1,0 +1,30 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "PaperFlipbookActor.h"
+#include "PickableActor.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class KINK_API APickableActor : public APaperFlipbookActor
+{
+	GENERATED_BODY()
+	
+public:
+	APickableActor(const FObjectInitializer& ObjectInitializer);
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSecond) override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Ship)
+		int32 Range;
+
+	typedef union data MessageData;
+
+	virtual MessageData GetData();
+
+};
