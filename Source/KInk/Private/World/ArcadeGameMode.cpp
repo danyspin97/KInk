@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "World/ArcadeGameState.h"
@@ -146,6 +146,5 @@ void AArcadeGameMode::GameOver()
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	GetWorldTimerManager().ClearAllTimersForObject(EnemySpawnerHandler);
 	Pool->ClearPooling();
-	PlayerShip->SetActorTickEnabled(false);
-	PlayerShip->GetController()->SetActorTickEnabled(false);
+	PlayerShip->GameOver();
 }

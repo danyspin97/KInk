@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #pragma once
 
@@ -26,44 +26,43 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 
-	virtual void FireTimeCheck(const FVector& PlayerLocation);
+	// Same as FireTimeCheck() but fire to Location
+	bool CanFire();
 
-	virtual void Fire(const FVector& PlayerLocation);
+	// Fire, override this function to have special behaviours
+	virtual void Fire();
+
+	// Fire to a location
+	virtual void Fire(const FVector& Location);
 
 	virtual void OnMessage(struct FMessage Message) override;
 
 	FORCEINLINE class ABaseBotController* GetBotController() { return Cast<ABaseBotController>(GetController()); };
 
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
-		int32 DistanceToAttack;
+	int32 DistanceToAttack;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
-		TSubclassOf<class AProjectile> Projectile;
+	TSubclassOf<class AProjectile> Projectile;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
 	TSubclassOf<class AEffectsActor> DestroyedEffect;
 
 	// True if that ship destroy the player when it has been hit
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
-		bool bDestroyPlayerShipWhenImpact;
+	bool bDestroyPlayerShipWhenImpact;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
-		bool bDealImpactDamage;
+	bool bDealImpactDamage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
-		USoundCue* SoundDestroyed;
+	USoundCue* SoundDestroyed;
 
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
-		UAudioComponent* AudioComponent;
-
-	//UPROPERTY(EditDefaultsOnly, Category = Attack)
-	//TSubclassOf<AProjectile> ProjectileBlueprint;
-
-	//UFUNCTION(BlueprintNativeEvent, Category = Weapon)
-	//TArray<const FVector&> GetMultipleShotDirection();
+	UAudioComponent* AudioComponent;
 
 	virtual void Pool();
 
@@ -71,19 +70,13 @@ public:
 
 	FORCEINLINE int32 GetMaxHealth() { return MaxHealth; };
 
-	//FORCEINLINE void SetMaxHealth(int32 MaxHealth) { this->MaxHealth = MaxHealth; };
-
 	FORCEINLINE int32 GetCurrentHealth() { return CurrentHealth; };
 
-	FORCEINLINE void  SetCurrentHealth(int32 CurrentHealth) { this->CurrentHealth = CurrentHealth; };
+	FORCEINLINE void SetCurrentHealth(int32 CurrentHealth) { this->CurrentHealth = CurrentHealth; };
 
 	FORCEINLINE int32 GetBulletDamage() { return BulletDamage; };
 
-	//FORCEINLINE void SetBulletDamage(int32 BulletDamage) { this->BulletDamage = BulletDamage; };
-
 	FORCEINLINE int32 GetImpactDamage() { return ImpactDamage; };
-
-	//FORCEINLINE void SetImpactDamage(int32 ImpactDamage) { this->ImpactDamage = ImpactDamage; };
 
 	FORCEINLINE int32 GetProbabilityOfPowerUp() { return ProbabilityOfPowerUp; };
 
@@ -99,6 +92,9 @@ public:
 	float FireRate;
 
 	float FireTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = Attack)
+	bool bAlwaysFire;
 
 	class AMessageHandler* MessageHandler;
 

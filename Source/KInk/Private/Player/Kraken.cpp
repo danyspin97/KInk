@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Kraken.h"
@@ -114,6 +114,13 @@ void AKraken::GameStart()
 	// Set the current stats of the ship to the default value
 	CustomPlayerState->ResetNewGame();
 	InkFire->VolumeMultiplier = 0.4;
+}
+
+void AKraken::GameOver()
+{
+	SetActorTickEnabled(false);
+	GetController()->SetActorTickEnabled(false);
+	Sprite->SetHiddenInGame(true);
 }
 
 void AKraken::MoveUp(float Value)

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #pragma once
 
@@ -14,7 +14,7 @@ class KINK_API ASeaStar : public AEnemy
 	GENERATED_BODY()
 	
 public:
-	virtual void Fire(const FVector& PlayerLocation) override;
-	
-	
+	virtual void Tick(float DeltaTime) override;
+
+	virtual void Fire(const FVector& Location) override;	
 };

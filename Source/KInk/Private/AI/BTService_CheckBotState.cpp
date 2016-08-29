@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Player/Kraken.h"
@@ -10,6 +10,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 /* This contains includes all key types like UBlackboardKeyType_Vector used below. */
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
 void UBTService_CheckBotState::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
@@ -27,7 +29,9 @@ void UBTService_CheckBotState::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	const FVector& PawnLocation = PlayerActor->GetCapsuleComponent()->GetComponentLocation();
 	int32 Dist = FVector::Dist(SelfLocation, PawnLocation);
 	FBlackboard::FKey BotStateKey = OwnerComp.GetBlackboardComponent()->GetKeyID(TEXT("BotState"));
+	FBlackboard::FKey PlayerLocationKey = OwnerComp.GetBlackboardComponent()->GetKeyID(TEXT("PlayerLocation"));
 	EBotState BotState = static_cast<EBotState>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Enum>(BotStateKey));
+	Controller->GetBlackboardComp()->SetValue<UBlackboardKeyType_Vector>(PlayerLocationKey, PawnLocation);
 	if (Dist <= Controller->EnemyPawn->DistanceToAttack && BotState == EBotState::BT_Following)
 	{
 		EBotState NewBotState = EBotState::BT_Attacking;
@@ -38,7 +42,6 @@ void UBTService_CheckBotState::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 		EBotState NewBotState = EBotState::BT_Following;
 		Controller->GetBlackboardComp()->SetValue<UBlackboardKeyType_Enum>(BotStateKey, static_cast<UBlackboardKeyType_Enum::FDataType>(NewBotState));
 	}
-
 }
 
 

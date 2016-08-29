@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "HUD/MainMenuWidget.h"
@@ -20,8 +20,6 @@ void ACustomHUD::SetVisibleMainMenu()
 {
 	for (TObjectIterator<UBaseWidget> Widgets; Widgets; ++Widgets)
 	{
-		//Widgets->RemoveFromViewport();
-		//Widgets->Destruct();
 		Widgets->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	if (MainMenuWidget)
@@ -38,19 +36,14 @@ void ACustomHUD::SetVisibleMainMenu()
 		MainMenuWidget->Initialize();
 		MainMenuWidget->AddToViewport(0);
 	}
-	
-	//ThePC->SetVirtualJoystickVisibility(false);
 }
 
 void ACustomHUD::SetVisibleGameWidget()
 {
 	for (TObjectIterator<UBaseWidget> Widgets; Widgets; ++Widgets)
 	{
-		//Widgets->RemoveFromViewport();
-		//Widgets->Destruct();
 		Widgets->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	// CREATE PAUSE OPTIONS WIDGET
 	if (PauseWidget)
 	{
 		PauseWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -80,8 +73,6 @@ void ACustomHUD::SetVisibleGameWidget()
 		GameWidget->Initialize();
 		GameWidget->AddToViewport(0);
 	}
-	//auto ThePC = Cast<ABasePlayerController>(GetWorld()->GetFirstPlayerController());
-	//ThePC->SetPause(false);
 }
 
 void ACustomHUD::SetVisiblePauseWidget()
@@ -95,8 +86,6 @@ void ACustomHUD::SetVisiblePauseWidget()
 	{
 		PauseWidget->SetVisibility(ESlateVisibility::Visible);
 	}
-	auto ThePC = Cast<ABasePlayerController>(GetWorld()->GetFirstPlayerController());
-	ThePC->SetPause(true);
 }
 
 void ACustomHUD::SetInvisiblePauseWidget()
@@ -105,8 +94,6 @@ void ACustomHUD::SetInvisiblePauseWidget()
 	{
 		Widgets->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	auto ThePC = Cast<ABasePlayerController>(GetWorld()->GetFirstPlayerController());
-	ThePC->SetPause(false);
 	TObjectIterator<UGameWidget> GameWidget;
 	if (GameWidget)
 	{
@@ -127,8 +114,6 @@ void ACustomHUD::SetGameOver()
 {
 	for (TObjectIterator<UBaseWidget> Widgets; Widgets; ++Widgets)
 	{
-		//Widgets->RemoveFromViewport();
-		//Widgets->Destruct();
 		Widgets->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	if (GameOverWidget)

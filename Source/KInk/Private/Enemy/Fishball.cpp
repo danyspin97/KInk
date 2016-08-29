@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Fishball.h"
 
-void AFishball::Fire(const FVector& PlayerLocation)
+void AFishball::Fire()
 {
+	Super::Fire();
 	const FVector& SelfLocation = GetCapsuleComponent()->GetComponentLocation();
 	for (int32 i = 0; i < NumberOfBullet; ++i)
 	{

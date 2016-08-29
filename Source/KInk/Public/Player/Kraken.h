@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #pragma once
 
@@ -29,6 +29,8 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	void GameStart();
+
+	void GameOver();
 
 	UFUNCTION()
 	void OnHit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

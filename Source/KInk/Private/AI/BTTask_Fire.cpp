@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "BTTask_Fire.h"
@@ -17,13 +17,8 @@ EBTNodeResult::Type UBTTask_Fire::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
 	{
 		return EBTNodeResult::Failed;
 	}
-	auto PlayerActor = Cast<AKraken>(OwnerComp.GetBlackboardComponent()->GetValue<UBlackboardKeyType_Object>(OwnerComp.GetBlackboardComponent()->GetKeyID(TEXT("PlayerActor"))));
-	if (!PlayerActor)
-	{
-		return EBTNodeResult::Failed;
-	}
-	const FVector& PlayerLocation = PlayerActor->GetCapsuleComponent()->GetComponentLocation();
-	pawn->FireTimeCheck(PlayerLocation);
+
+	pawn->Fire();
 
 	return EBTNodeResult::Succeeded;
 }

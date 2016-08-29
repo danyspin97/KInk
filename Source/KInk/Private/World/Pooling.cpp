@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "ArcadeGameMode.h"
@@ -12,7 +12,7 @@
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
-#define MAXENEMIES 7
+#define MAXENEMIES 12
 #define MAXPROJECTILES 30
 
 // Sets default values

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Kraken.h"
@@ -81,10 +81,12 @@ void ABasePlayerController::EscPressed()
 	case EGameState::GS_InGame:
 		CustomHUD->SetVisiblePauseWidget();
 		GameState->InGameState = EGameState::GS_InPause;
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
 		break;
 	case EGameState::GS_InPause:
 		CustomHUD->SetInvisiblePauseWidget();
 		GameState->InGameState = EGameState::GS_InGame;
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
 		break;
 	case EGameState::GS_InGameOver:
 		CustomHUD->SetVisibleMainMenu();
@@ -195,12 +197,3 @@ void ABasePlayerController::ShowFrameRate()
 	FPSCount = FPS;
 	FPS = 0;
 }
-
-bool ABasePlayerController::SetPause(bool bPause, FCanUnpause CanUnpauseDelegate)
-{
-	FInputModeGameAndUI InputMode;
-	InputMode.SetLockMouseToViewport(!bPause);
-	this->SetInputMode(InputMode);
-	return Super::SetPause(bPause, CanUnpauseDelegate);
-}
-

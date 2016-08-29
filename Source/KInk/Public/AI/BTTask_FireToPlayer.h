@@ -1,15 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #pragma once
 
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTTask_FindNextPointJellyfish.generated.h"
+#include "BTTask_FireToPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class KINK_API UBTTask_FindNextPointJellyfish : public UBTTask_BlackboardBase
+class KINK_API UBTTask_FireToPlayer : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 	

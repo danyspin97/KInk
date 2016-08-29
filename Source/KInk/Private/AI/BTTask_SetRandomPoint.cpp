@@ -1,12 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Enemy/Jellyfish.h"
-#include "BTTask_FindNextPointJellyfish.h"
+#include "BTTask_SetRandomPoint.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
-EBTNodeResult::Type UBTTask_FindNextPointJellyfish::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBTTask_SetRandomPoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	ABaseBotController* Controller = Cast<ABaseBotController>(OwnerComp.GetAIOwner());
 	if (!Controller)

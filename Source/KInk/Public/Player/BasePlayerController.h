@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #pragma once
 
@@ -45,8 +45,6 @@ public:
 	int32 FPSCount;
 
 	int8 FPS;
-
-	virtual bool SetPause(bool bPause, FCanUnpause CanUnpauseDelegate = FCanUnpause()) override;
 
 	void ShowFrameRate();
 	

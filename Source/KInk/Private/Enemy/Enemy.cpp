@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2016 WiseDragonStd
 
 #include "KInk.h"
 #include "Pooling.h"
@@ -21,6 +21,8 @@
 
 #include "Enemy.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
+
 AEnemy::AEnemy(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.DoNotCreateDefaultSubobject(TEXT("CapsuleComponent")))
 {
@@ -31,8 +33,8 @@ AEnemy::AEnemy(const class FObjectInitializer& ObjectInitializer)
 
 	AudioComponent = ObjectInitializer.CreateDefaultSubobject<UAudioComponent>(this, TEXT("AudioComponent"));
 	AudioComponent->VolumeMultiplier = 0;
-	//GetCharacterMovement()->BrakingFrictionFactor = 0;
-	//GetCharacterMovement()->BrakingDecelerationFlying = 1000;
+
+	bAlwaysFire = true;
 }
 
 void AEnemy::BeginPlay()
@@ -55,11 +57,16 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	const FVector& CapsuleLocation = CapsuleComponent->GetComponentLocation();
-	if (CapsuleLocation.Z != CapsuleHalfHeight)
+	if (CapsuleLocation.Z != 0)
 	{
-		//GetCapsuleComponent()->SetWorldLocation(FVector(CapsuleLocation.X, CapsuleLocation.Y, CapsuleHalfHeight));
+		GetCapsuleComponent()->SetWorldLocation(FVector(CapsuleLocation.X, CapsuleLocation.Y, 0));
 	}
-	FireTime += DeltaTime;
+
+	if (bAlwaysFire)
+	{
+		FireTime += DeltaTime;
+	}
+
 	if (bDamaged)
 	{
 		ColorValue = FMath::FInterpTo(ColorValue, 1, DeltaTime, 0.9);
@@ -71,26 +78,38 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
-void AEnemy::FireTimeCheck(const FVector& PlayerLocation)
+void AEnemy::Fire()
+{
+	FireTime -= FireRate;
+}
+
+bool AEnemy::CanFire()
 {
 	if (FireTime >= FireRate)
 	{
-		Fire(PlayerLocation);
-		FireTime -= FireRate;
+		return true;
 	}
+	return false;
 }
 
-void AEnemy::Fire(const FVector& PlayerLocation)
+void AEnemy::Fire(const FVector& Location)
 {
+	if (!CanFire())
+	{
+		return;
+	}
+
 	for (int32 i = 0; i < NumberOfBullet; ++i)
 	{
 		FString ProjectileSocketName = FString(TEXT("Projectile"));
 		ProjectileSocketName.AppendInt(i);
-		const FVector& Location = GetSprite()->GetSocketLocation(FName(*ProjectileSocketName));
-		const FRotator& Rotation = UKismetMathLibrary::FindLookAtRotation(Location, PlayerLocation);
+		const FVector& SocketLocation = GetSprite()->GetSocketLocation(FName(*ProjectileSocketName));
+		const FRotator& Rotation = UKismetMathLibrary::FindLookAtRotation(SocketLocation, Location);
 		const FVector& Direction = FRotationMatrix(FRotator(Rotation.Pitch, Rotation.Yaw, Rotation.Roll)).GetUnitAxis(EAxis::X);
-		PoolRef->PoolProjectile(GetWorld(), Projectile, this->GetClass(), Location, Rotation, Direction, (float)BulletDamage * GameState->Multiplier);
+		PoolRef->PoolProjectile(GetWorld(), Projectile, this->GetClass(), SocketLocation, Rotation, Direction, (float)BulletDamage * GameState->Multiplier);
 	}
+
+	FireTime -= FireRate;
 }
 
 float AEnemy::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
@@ -173,14 +192,15 @@ void AEnemy::Pool()
 	CurrentHealth = MaxHealth * GameState->Multiplier;
 	FireTime = 0;
 	// This variable determines the rate of the fire, increase the value the rate is divided by and the rate will have a smooth curve
-	FireRate = 1.0f / (GetRate() * GameState->Multiplier / 50);
+	FireRate = 1.0f / ((float)GetRate() * GameState->Multiplier / 50.f);
 	AudioComponent->VolumeMultiplier = 1;
 	ColorValue = 1;
 	bDamaged = false;
 	Sprite->SetSpriteColor(FLinearColor(1, ColorValue, ColorValue));
+	//GetBotController()->StartBehaviorTree();
 }
 
 void AEnemy::Deactivate()
 {
-
+	//GetBotController()->StopBehaviorTree();
 }
