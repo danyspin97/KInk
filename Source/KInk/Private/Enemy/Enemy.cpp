@@ -105,7 +105,7 @@ void AEnemy::Fire(const FVector& Location)
 		ProjectileSocketName.AppendInt(i);
 		const FVector& SocketLocation = GetSprite()->GetSocketLocation(FName(*ProjectileSocketName));
 		const FRotator& Rotation = UKismetMathLibrary::FindLookAtRotation(SocketLocation, Location);
-		const FVector& Direction = FRotationMatrix(FRotator(Rotation.Pitch, Rotation.Yaw, Rotation.Roll)).GetUnitAxis(EAxis::X);
+		const FVector& Direction = FRotationMatrix(FRotator(Rotation.Pitch, Rotation.Yaw - 20, Rotation.Roll)).GetUnitAxis(EAxis::X);
 		PoolRef->PoolProjectile(GetWorld(), Projectile, this->GetClass(), SocketLocation, Rotation, Direction, (float)BulletDamage * GameState->Multiplier);
 	}
 
