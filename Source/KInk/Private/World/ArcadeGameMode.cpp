@@ -33,7 +33,6 @@ void AArcadeGameMode::StartPlay()
 	Soundtrack->SetSound(MainMenuSoundtrack);
 	Soundtrack->Play();
 	Pool = UStaticLibrary::SpawnBP<APooling>(GetWorld(), PoolingBlueprint, FVector::FVector(0), FRotator::FRotator(0));
-	Pool->InitPool();
 	EnemySpawnerHandler = UStaticLibrary::SpawnBP<AEnemySpawnerHandler>(GetWorld(), EnemySpawnerHandlerBlueprint, FVector::FVector(0), FRotator::FRotator(0));
 	MessageHandler = UStaticLibrary::SpawnBP<AMessageHandler>(GetWorld(), MessageHandlerBlueprint, FVector::FVector(0), FRotator::FRotator(0));
 	GameState = Cast<AArcadeGameState>(GetWorld()->GetGameState());
@@ -41,6 +40,8 @@ void AArcadeGameMode::StartPlay()
 	PlayerShip = Cast<AKraken>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	GameHUD = Cast<ACustomHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	ThePC = Cast<ABasePlayerController>(GetWorld()->GetFirstPlayerController());
+	FTimerHandle InitPoolTimer;
+	GetWorldTimerManager().SetTimer(InitPoolTimer, Pool, &APooling::InitPool, 0.4, false, -1.f);
 }
 
 void AArcadeGameMode::Tick(float DeltaTime)
@@ -48,21 +49,6 @@ void AArcadeGameMode::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (GameState->InGameState == EGameState::GS_InGame)
 	{
-		int32 i = 0;
-		CameraLocation = PlayerShip->CameraComponent->GetComponentLocation();
-		for (int32 i = 0; i < Pool->ProjectileArray.Num(); i++)
-		{
-			for (int32 j = 0; j < Pool->ProjectileArray[i].ActiveProjectile.Num(); j++)
-			{
-				if (Pool->ProjectileArray[i].ActiveProjectile[j] && !UStaticLibrary::IsInFrustum(Pool->ProjectileArray[i].ActiveProjectile[j], GetWorld()))
-				{
-					MessageData DestroyedData;
-					DestroyedData.CauseDestroyed = ECauseDestroyed::ScreenLimit;
-					// Say the message handler that the projectile has reached screen limit
-					MessageHandler->ReceiveMessage(FMessage((AActor*)this, Pool->ProjectileArray[i].ActiveProjectile[j], EMessageData::Destroyed, DestroyedData));
-				}
-			}
-		}
 		if (GameState->bIsTextFading)
 		{
 			if (GameState->StringOpacity > 0.55)
@@ -114,7 +100,7 @@ void AArcadeGameMode::SpawnPowerUp(int32 Possibility, const FVector Location)
 
 void AArcadeGameMode::IncreaseDifficult()
 {
-	GameState->Multiplier += 0.01f;
+	GameState->Multiplier += 0.05f;
 }
 
 void AArcadeGameMode::PutScoreToBoard(FString Nickname, int32 Score)

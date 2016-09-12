@@ -60,4 +60,6 @@ public:
 	bool bIsCharacterOwning;
 
 	UClass* OwnerClass;
+
+	FTimerHandle DeactivationTimer;
 };

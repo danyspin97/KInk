@@ -12,13 +12,14 @@
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
-#define MAXENEMIES 12
-#define MAXPROJECTILES 30
+#define MAXENEMIES 15
+#define MAXPROJECTILES 50
 
 // Sets default values
 APooling::APooling()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	bPoolActive = false;
 }
 
 // Called when the game starts or when spawned
@@ -143,7 +144,7 @@ AProjectile* APooling::PoolProjectile(UWorld* World, UClass* ProjectileClass, UC
 			}
 			if (ProjectileArray[i].DeactivatedProjectile.IsValidIndex(k))
 			{
-				int32 j = ProjectileArray[i].ActiveProjectile.Add(ProjectileArray[i].DeactivatedProjectile[k]);
+				ProjectileArray[i].ActiveProjectile.Add(ProjectileArray[i].DeactivatedProjectile[k]);
 				AProjectile* PoolProjectile = ProjectileArray[i].DeactivatedProjectile[k];
 				ProjectileArray[i].DeactivatedProjectile.RemoveAtSwap(k);
 				PoolProjectile->SetActorEnableCollision(true);
@@ -153,6 +154,22 @@ AProjectile* APooling::PoolProjectile(UWorld* World, UClass* ProjectileClass, UC
 				PoolProjectile->SetActorTickEnabled(true);
 				return PoolProjectile;
 			}
+			/*else
+			{
+				AProjectile* NewProjectile = UStaticLibrary::SpawnBP<AProjectile>(World, ProjectileClass, Location + FVector(5000), Rotation);
+				NewProjectile->Pool(OwnerClass, Direction, Damage, bIsCharacterOwning);
+				NewProjectile->SetActorLocationAndRotation(Location, Rotation);
+				ProjectileArray[i].ActiveProjectile.Add(NewProjectile);
+				return NewProjectile;
+				if (NewProjectile)
+				{
+					return NewProjectile;
+				}
+				else
+				{
+					return NULL;
+				}
+			}*/
 		}
 	}
 	return NULL;
@@ -172,7 +189,7 @@ void APooling::DeactivateProjectile(AProjectile* ProjectileToDeactivate)
 				ProjectileToDeactivate->SetActorEnableCollision(false);
 				ProjectileToDeactivate->SetActorTickEnabled(false);
 				ProjectileToDeactivate->BoxComp->SetWorldLocation(DeactivateLocation);
-				ProjectileToDeactivate->Deactivate();
+				// ProjectileToDeactivate->Deactivate();
 				return;
 			}
 			else

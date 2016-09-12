@@ -50,7 +50,7 @@ void AEnemySpawnerHandler::NextWave()
 	}
 	else
 	{
-		GameState->DifficultyCounter++;
+		GameState->DifficultyCounter += 0.5;
 		GameState->Wave = 1;
 	}
 	EnemySpawned = 0;

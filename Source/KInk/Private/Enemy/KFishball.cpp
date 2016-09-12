@@ -1,6 +1,7 @@
 // Copyright (c) 2016 WiseDragonStd.
 
 #include "KInk.h"
+#include "StaticLibrary.h"
 #include "KFishball.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)

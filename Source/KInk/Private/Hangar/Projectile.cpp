@@ -11,6 +11,8 @@
 #include "Projectile.h"
 #include "PaperFlipbookComponent.h"
 
+#define PROJECTILE_DEACTIVATION_TIMER 10
+
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
 // Sets default values
@@ -48,9 +50,7 @@ void AProjectile::Tick( float DeltaTime )
 	// Move that vector a little
 	Location += Direction * CurrentVelocity * DeltaTime;
 	// Set the vector as the new location of the player
-	//SetActorLocation(Location);
 	BoxComp->SetWorldLocation(Location);
-	//SetActorLocation(Location);
 }
 
 
@@ -95,10 +95,14 @@ void AProjectile::Pool(UClass* OwnerClass, const FVector& Direction, int16 Damag
 	this->bIsCharacterOwning = bIsCharacterOwning;
 	this->Direction = Direction;
 	CurrentVelocity = BaseVelocity;
+	GetWorldTimerManager().SetTimer(DeactivationTimer, this, &AProjectile::Deactivate, PROJECTILE_DEACTIVATION_TIMER, false, -1.f);
 }
 
 void AProjectile::Deactivate()
 {
+	TActorIterator<APooling> Pool(GetWorld());
+	Pool->DeactivateProjectile(this);
+	GetWorldTimerManager().ClearTimer(DeactivationTimer);
 	Direction = FVector();
 	CurrentVelocity = 0;
 }

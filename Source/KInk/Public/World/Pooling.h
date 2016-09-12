@@ -105,9 +105,9 @@ public:
 
 	bool bPoolActive = false;
 
-	TArray<FEnemyPooling, TInlineAllocator<2>> EnemyArray;
+	TArray<FEnemyPooling, TInlineAllocator<4>> EnemyArray;
 
-	TArray<FProjectilePooling, TInlineAllocator<3>> ProjectileArray;
+	TArray<FProjectilePooling, TInlineAllocator<4>> ProjectileArray;
 
 	FVector DeactivateLocation = FVector(50000, 50000, 0);
 	
