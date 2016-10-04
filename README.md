@@ -2,14 +2,13 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/65194d3967794f64b763772afa927f2f)](https://www.codacy.com/app/WiseDragonStd/KInk?utm_source=gitlab.com&amp;utm_medium=referral&amp;utm_content=WiseDragonStd/KInk&amp;utm_campaign=Badge_Grade)
 ## Description
 - Take the part of a kraken and fight enemies in the deep sea.
-- Survive to endless waves of enemies and break the highscores.
+- Survive to endless waves of enemies.
 - Take power up to heal yourself and destroy tons of enemies.
 
 # Play it!
 You can download the last version [here](http://gamejolt.com/games/k-ink-kraken-king/140575) or build the source.
-- [x] [Win64](http://gamejolt.com/games/k-ink-kraken-king/140575/download/build/325061)
-- [ ] Win32
-- [ ] Linux
+- [x] Win64
+- [x] Win32
 
 ## Origin
 This game was originally developed as a shoot'em up for some months, then it was adapted for the 2 weeks GitKraken contest.
