@@ -110,6 +110,9 @@ public:
 
 	bool bDamaged;
 
+	// Is this actor in object pool?
+	bool bInPool;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = Attack)
 	int32 MaxHealth;

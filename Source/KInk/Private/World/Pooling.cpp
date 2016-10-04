@@ -13,7 +13,7 @@
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
 #define MAXENEMIES 15
-#define MAXPROJECTILES 50
+#define MAXPROJECTILES 25
 
 // Sets default values
 APooling::APooling()
@@ -78,6 +78,16 @@ void APooling::InitPool()
 			}
 		}
 	}
+	for (int32 i = 0; i < Projectiles.Num(); i++)
+	{
+		for (int32 l = 0; l < ProjectileArray[i].DeactivatedProjectile.Num(); l++)
+		{
+			if (!ProjectileArray[i].DeactivatedProjectile.IsValidIndex(l) && !ProjectileArray[i].DeactivatedProjectile[l])
+			{
+				ProjectileArray[i].DeactivatedProjectile.RemoveAtSwap(l);
+			}
+		}
+	}
 	bPoolActive = true;
 }
 
@@ -94,16 +104,15 @@ AEnemy* APooling::PoolEnemy(UWorld* World, UClass* EnemyClass, const FVector& Lo
 			}
 			if (EnemyArray[i].DeactivatedEnemy.IsValidIndex(DeactiveEnemyCont))
 			{
-				int32 k = EnemyArray[i].ActiveEnemy.Add(EnemyArray[i].DeactivatedEnemy[DeactiveEnemyCont]);
-				AEnemy* PoolingEnemy = EnemyArray[i].ActiveEnemy[k];
+				AEnemy* EnemyToPool = EnemyArray[i].DeactivatedEnemy[DeactiveEnemyCont];
 				EnemyArray[i].DeactivatedEnemy.RemoveAtSwap(DeactiveEnemyCont);
-				PoolingEnemy->SetActorEnableCollision(true);
-				PoolingEnemy->SetActorHiddenInGame(false);
-				PoolingEnemy->SetActorTickEnabled(true);
-				PoolingEnemy->SetActorLocationAndRotation(Location, Rotation);
-				PoolingEnemy->GetCapsuleComponent()->SetWorldLocationAndRotation(Location, Rotation);
-				PoolingEnemy->Pool();
-				return PoolingEnemy;
+				EnemyToPool->SetActorEnableCollision(true);
+				EnemyToPool->SetActorHiddenInGame(false);
+				EnemyToPool->SetActorTickEnabled(true);
+				EnemyToPool->SetActorLocationAndRotation(Location, Rotation);
+				EnemyToPool->GetCapsuleComponent()->SetWorldLocationAndRotation(Location, Rotation);
+				EnemyToPool->Pool();
+				return EnemyToPool;
 			}
 		}
 	}
@@ -116,16 +125,11 @@ void APooling::DeactivateEnemy(AEnemy* EnemyToDeactivate)
 	{
 		if (EnemyArray[i].EnemyClass == EnemyToDeactivate->GetClass())
 		{
-			int32 k = EnemyArray[i].ActiveEnemy.Find(EnemyToDeactivate);
-			if (k != INDEX_NONE)
-			{
-				EnemyArray[i].ActiveEnemy.RemoveAtSwap(k);
-				EnemyArray[i].DeactivatedEnemy.Add(EnemyToDeactivate);
-				EnemyToDeactivate->SetActorEnableCollision(false);
-				EnemyToDeactivate->SetActorTickEnabled(false);
-				EnemyToDeactivate->Deactivate();
-				EnemyToDeactivate->GetCapsuleComponent()->SetWorldLocation(DeactivateLocation);
-			}
+			EnemyArray[i].DeactivatedEnemy.Add(EnemyToDeactivate);
+			EnemyToDeactivate->SetActorEnableCollision(false);
+			EnemyToDeactivate->SetActorTickEnabled(false);
+			EnemyToDeactivate->Deactivate();
+			EnemyToDeactivate->GetCapsuleComponent()->SetWorldLocation(DeactivateLocation);
 			return;
 		}
 	}
@@ -144,13 +148,12 @@ AProjectile* APooling::PoolProjectile(UWorld* World, UClass* ProjectileClass, UC
 			}
 			if (ProjectileArray[i].DeactivatedProjectile.IsValidIndex(k))
 			{
-				ProjectileArray[i].ActiveProjectile.Add(ProjectileArray[i].DeactivatedProjectile[k]);
-				AProjectile* PoolProjectile = ProjectileArray[i].DeactivatedProjectile[k];
-				ProjectileArray[i].DeactivatedProjectile.RemoveAtSwap(k);
+				AProjectile* PoolProjectile = ProjectileArray[i].DeactivatedProjectile.Pop();
 				PoolProjectile->SetActorEnableCollision(true);
-				PoolProjectile->SetActorLocationAndRotation(Location, Rotation);
+				//PoolProjectile->SetActorLocationAndRotation(Location, Rotation);
 				PoolProjectile->BoxComp->SetWorldLocationAndRotation(Location, Rotation);
 				PoolProjectile->Pool(OwnerClass, Direction, Damage, bIsCharacterOwning);
+				PoolProjectile->SetActorHiddenInGame(false);
 				PoolProjectile->SetActorTickEnabled(true);
 				return PoolProjectile;
 			}
@@ -159,7 +162,6 @@ AProjectile* APooling::PoolProjectile(UWorld* World, UClass* ProjectileClass, UC
 				AProjectile* NewProjectile = UStaticLibrary::SpawnBP<AProjectile>(World, ProjectileClass, Location + FVector(5000), Rotation);
 				NewProjectile->Pool(OwnerClass, Direction, Damage, bIsCharacterOwning);
 				NewProjectile->SetActorLocationAndRotation(Location, Rotation);
-				ProjectileArray[i].ActiveProjectile.Add(NewProjectile);
 				return NewProjectile;
 				if (NewProjectile)
 				{
@@ -181,21 +183,12 @@ void APooling::DeactivateProjectile(AProjectile* ProjectileToDeactivate)
 	{
 		if (ProjectileArray[i].ProjectileClass == ProjectileToDeactivate->GetClass())
 		{
-			int32 k = ProjectileArray[i].ActiveProjectile.Find(ProjectileToDeactivate);
-			if (k != INDEX_NONE)
-			{
-				ProjectileArray[i].ActiveProjectile.RemoveAtSwap(k);
-				ProjectileArray[i].DeactivatedProjectile.Add(ProjectileToDeactivate);
-				ProjectileToDeactivate->SetActorEnableCollision(false);
-				ProjectileToDeactivate->SetActorTickEnabled(false);
-				ProjectileToDeactivate->BoxComp->SetWorldLocation(DeactivateLocation);
-				// ProjectileToDeactivate->Deactivate();
-				return;
-			}
-			else
-			{
-				return;
-			}
+			ProjectileArray[i].DeactivatedProjectile.Add(ProjectileToDeactivate);
+			ProjectileToDeactivate->SetActorEnableCollision(false);
+			ProjectileToDeactivate->SetActorTickEnabled(false);
+			ProjectileToDeactivate->SetActorHiddenInGame(true);
+			ProjectileToDeactivate->BoxComp->SetWorldLocation(DeactivateLocation);
+			return;
 		}
 	}
 }

@@ -111,8 +111,7 @@ void AProjectile::OnMessage(struct FMessage Message)
 {
 	if (Message.TypeData == EMessageData::Destroyed)
 	{
-		TActorIterator<APooling> Pool(GetWorld());
-		Pool->DeactivateProjectile(this);
+		Deactivate();
 	}
 }
 

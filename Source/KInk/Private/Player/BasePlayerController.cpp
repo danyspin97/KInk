@@ -21,7 +21,7 @@ void ABasePlayerController::BeginPlay()
 	FTimerHandle FPSTimerHandle;
 	GetWorldTimerManager().SetTimer(FPSTimerHandle, this, &ABasePlayerController::ShowFrameRate, 1.f, true);
 	SetControlRotation(FRotator(-90, 0, 0));
-	//ConsoleCommand(TEXT("r.setRes 1024x760w"), true);
+	/*ConsoleCommand(TEXT("r.setRes 1024x760w"), true);
 	ConsoleCommand(TEXT("t.maxfps 60"), true);
 	ConsoleCommand(TEXT("r.ScreenPertentage 100"), true);
 	ConsoleCommand(TEXT("r.ViewDistanceScale 0.6"), true);
@@ -30,7 +30,7 @@ void ABasePlayerController::BeginPlay()
 	ConsoleCommand(TEXT("r.Upscale.Quality 3"), true);
 	ConsoleCommand(TEXT("sg.ShadowQuality 3"), true);
 	ConsoleCommand(TEXT("sg.TextureQuality 3"), true);
-	ConsoleCommand(TEXT("sg.EffectsQuality 3"), true);
+	ConsoleCommand(TEXT("sg.EffectsQuality 3"), true);*/
 	//ConsoleCommand(TEXT("show stats"), true);
 	this->SetTickableWhenPaused(false);
 }

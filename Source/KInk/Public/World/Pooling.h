@@ -15,7 +15,6 @@ struct FEnemyPooling
 
 	typedef TArray<AEnemy*, TInlineAllocator<30>> PoolingEnemy;
 
-	PoolingEnemy ActiveEnemy;
 	PoolingEnemy DeactivatedEnemy;
 
 	FEnemyPooling()
@@ -38,7 +37,6 @@ struct FProjectilePooling
 	typedef TArray<AProjectile*, TInlineAllocator<70>> PoolingProjectile;
 
 	PoolingProjectile DeactivatedProjectile;
-	PoolingProjectile ActiveProjectile;
 
 	FProjectilePooling()
 	{

@@ -35,6 +35,7 @@ AEnemy::AEnemy(const class FObjectInitializer& ObjectInitializer)
 	AudioComponent->VolumeMultiplier = 0;
 
 	bAlwaysFire = true;
+	bInPool = false;
 }
 
 void AEnemy::BeginPlay()
@@ -62,7 +63,7 @@ void AEnemy::Tick(float DeltaTime)
 		GetCapsuleComponent()->SetWorldLocation(FVector(CapsuleLocation.X, CapsuleLocation.Y, 0));
 	}
 
-	if (bAlwaysFire)
+	if (bAlwaysFire && !bInPool)
 	{
 		FireTime += DeltaTime;
 	}
@@ -136,7 +137,9 @@ float AEnemy::TakeDamage(float DamageAmount, const FDamageEvent& DamageEvent, cl
 					DestroyedData.CauseDestroyed = ECauseDestroyed::ImpactWithShip;
 				}
 				else
+				{
 					DestroyedData.CauseDestroyed = ECauseDestroyed::Projectile;
+				}
 			}
 			// Tell the message handler that this enemy has been destroyed and who destroyed it
 			MessageHandler->ReceiveMessage(FMessage(DamageCauser, (AActor*)this, EMessageData::Destroyed, DestroyedData));
@@ -197,10 +200,10 @@ void AEnemy::Pool()
 	ColorValue = 1;
 	bDamaged = false;
 	Sprite->SetSpriteColor(FLinearColor(1, ColorValue, ColorValue));
-	//GetBotController()->StartBehaviorTree();
+	bInPool = false;
 }
 
 void AEnemy::Deactivate()
 {
-	//GetBotController()->StopBehaviorTree();
+	bInPool = true;
 }
